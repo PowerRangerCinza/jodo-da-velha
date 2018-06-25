@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Jogo da Velha</title>
+
+	<style type="text/css">
+	body{background-color: black}
+		
+		#vez{
+			margin: auto;
+			margin-top: 100px;
+			width: 252px;
+			height: 80px;
+
+
+		}
+
+		.bloco{
+			width:100px;
+			height: 80px;
+			border:4px solid #000;
+			float: left;
+			text-align: center;
+			padding-top: 20px;
+
+		}
+
+		.principal{
+			width: 416px;
+			height: 416px;
+			margin: auto;
+
+		}
+
+#l1{
+  background-color: blue;
+
+}
+#l2{
+  background-color: blue;
+}
+#l3{
+  background-color: blue;
+}
+#m1{
+background-color: blue;
+}
+#m2{
+background-color: blue;
+}
+#m3{
+background-color: blue;
+}
+ #n1{
+background-color: blue;
+  }    
+#n2{
+background-color: blue;
+}
+#n3{
+background-color: blue;
+}
+
+
+
+	</style>
+
+
+</head>
+
+<body>
+
+	<div id="vez">
+		<p style="float: left; margin-right: 30px;color: white">JOGADA:</p>
+		<img src="" border="" height="40">
+	</div>
+
+	<div class="principal">
+		<div id="l1" class="bloco" make=""></div>
+		<div id="l2" class="bloco" make=""></div>
+		<div id="l3" class="bloco" make=""></div>
+		<div id="m1" class="bloco" make=""></div>
+		<div id="m2" class="bloco" make=""></div>
+		<div id="m3" class="bloco" make=""></div>
+		<div id="n1" class="bloco" make=""></div>
+		<div id="n2" class="bloco" make=""></div>
+		<div id="n3" class="bloco" make=""></div>
+
+	</div>
+
+<script type="text/javascript">
+	const jogador1="JOGADOR 1";
+const jogador2= "JOGADOR 2";
+var jogadaAtual = jogador1;
+var fimDejogo = false;
+var imagens = new Array();
+
+
+
+imagensquadrado("x2.png","circulo2.png","x.png","circulo.png")			
+alternanteVez();
+alternanteSimbolo();
+
+function imagensquadrado(){
+	for (i = 0; i < imagensquadrado.arguments.length; i++) {
+					imagens[i] = new Image()
+					imagens[i].src = imagensquadrado.arguments[i]
+				}
+}
+
+//colocar o x e a bolinha na div que mostra a vez
+function alternanteVez(){
+	
+
+	if (fimDejogo) { return;}
+
+	if (jogadaAtual == jogador1) {
+
+		var jogador = document.querySelectorAll("div#vez img")[0];
+		jogador.setAttribute("src", imagens[0].src);
+	} else{
+
+		var jogador = document.querySelectorAll("div#vez img")[0];
+		jogador.setAttribute("src", imagens[1].src);
+	}
+}
+//preencher os blocos
+function alternanteSimbolo(){
+	
+
+	var bloco = document.getElementsByClassName("bloco");
+	for (var i = 0; i < bloco.length; i++) {
+
+		bloco[i].innerHTML = "<img id='p1' src='"+imagens[2].src+"' border='0'><img id='p2' src='"+imagens[3].src+"' border='0'>";
+		bloco[i].getElementsByTagName('img')[0].style.display = "none";
+		bloco[i].getElementsByTagName('img')[1].style.display = "none";
+
+		bloco[i].addEventListener("click", function(){
+
+			if (fimDejogo) {return;}
+
+
+
+			if(this.getAttribute("make") == ""){
+
+				if (jogadaAtual == jogador1) {
+					this.getElementsByTagName('img')[0].style.display = "inline";
+					this.setAttribute("make", jogador1);
+					jogadaAtual = jogador2;
+                }else{
+					this.getElementsByTagName('img')[1].style.display = "inline";
+					this.setAttribute("make", jogador2);
+					jogadaAtual = jogador1;
+				}
+				alternanteVez();//para toda vez que clicar mudar o simbolo
+				defineGanhador();
+
+			}
+
+		});
+	}
+}
+
+async function defineGanhador(){
+
+//variaveis = quadrados
+var l1 = document.getElementById("l1").getAttribute("make");
+var l2 = document.getElementById("l2").getAttribute("make");
+var l3 = document.getElementById("l3").getAttribute("make");
+var m1 = document.getElementById("m1").getAttribute("make");
+var m2 = document.getElementById("m2").getAttribute("make");
+var m3 = document.getElementById("m3").getAttribute("make");
+var n1 = document.getElementById("n1").getAttribute("make");
+var n2 = document.getElementById("n2").getAttribute("make");
+var n3 = document.getElementById("n3").getAttribute("make");
+
+
+var vitoria = 0;
+//fazendo as condiçoes de vitoria
+
+if(((l1 == m1 && l1 == n1) || (l1 == l2 && l1 == l3 ) || (l1==m2 && l1 == n3 )) && l1 != ""  ){
+	vitoria = l1;
+}else if((m2 == m1 && m2 == m3 && m2 !="" ) || (m2==l2 && m2==n2 && m2 !="") || (m2==l3 && m2==n1 && m2!=""))
+{
+	vitoria = m2;
+
+}else if(((n3==n2 && n3==n1)||(n3==l3 && n3 == m3)) && n3 != "")
+{
+	vitoria = n3;
+}
+
+if (vitoria != 0) {
+	
+	fimDejogo = true;
+
+	 await sleep(50);// para dar tempo do ultimo quadrado ser preenchido
+	alert("VENCEDOR : '" + vitoria + "'");
+}
+
+
+
+
+
+}
+
+
+
+
+
+
+
+function sleep(ms)
+{
+return new Promise(resolve => setTimeout(resolve, ms));
+
+}
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
